@@ -1,48 +1,98 @@
 #include <cs50.h>
-#include <stdio.h>
 #include <string.h>
 #include <ctype.h>
 #include <stdlib.h>
+#include <stdio.h>
 
-//int convert_argv (string text);
-int only_digits(string text);
+bool only_digits(string text);
+char rotate(char letter, int key);
 
 int main(int argc, string argv[])
 {
-    string text=argv[1];
-    if (argc == 2 && only_digits(text) != 0)
+    // Checking that we were given only one argv value
+    if (argc != 2)
     {
-            printf("One %i\nTwo %s\nThree \n", only_digits(text),text);
-            return 0;
+        printf("Usage: ./caesar key\n");
+        return 1;
     }
-    else
-    printf("Usage: ./caesar key\n");
-    return 1;
+
+    string text = argv[1];
+    bool result_of_checking = only_digits(text);
+
+    // Check that the text contains only numbers
+    if (result_of_checking != true)
+    {
+        printf("Usage: ./caesar key\n");
+        return 1;
+    }
+
+    // Convert text from string to int
+    int key = atoi(argv[1]);
+
+    // Ask the user to enter text
+    string plaint_text = get_string("plaintext: ");
+
+    char letter;
+    int index;
+
+    //Printing the result of the transformation
+    printf("ciphertext: ");
+
+    for (index = 0; index < strlen(plaint_text);)
+    {
+
+        letter = plaint_text[index];
+        printf("%c", rotate(letter, key));
+        index++;
+    }
+
+    printf("\n");
+
+
 }
 
-int only_digits(string text)
+
+
+// Check that the text contains only numbers
+bool only_digits(string text)
 {
-    int result;
-    int i = 0, n = strlen(text), s = 0;
+    int i, n = strlen(text);
+
+    for (i = 0; i < n;)
     {
-    while (i <= n && result != 0 && text[i] != '\0')
+        if isdigit(text[i])
         {
-            if isdigit(text[i])
-            {
-            result = 1;
             i++;
-            }
-            else
-            {
-            result = 0;
-            i++;
-            }
+        }
+        else
+        {
+            return false;
         }
     }
-    return result;
+    return true;
 }
 
-/*int convert_argv (string text)
+
+//counting new letters
+char rotate(char letter, int key)
 {
-    return atoi(text);
-}*/
+    int result;
+    if isalpha(letter)
+    {
+        if islower(letter)
+        {
+            result = (letter + key - 97) % 26;
+            result = result + 97;
+        }
+        else
+        {
+            result = (letter + key - 65) % 26;
+            result = result + 65;
+        }
+    }
+    else
+    {
+        result = letter;
+    }
+    return (char)result;
+}
